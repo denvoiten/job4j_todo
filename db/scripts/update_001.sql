@@ -1,4 +1,4 @@
-CREATE TABLE if not exists items (
+CREATE TABLE if not exists tasks (
     id SERIAL PRIMARY KEY,
     name TEXT,
     description TEXT,

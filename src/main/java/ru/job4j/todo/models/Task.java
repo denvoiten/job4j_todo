@@ -1,9 +1,12 @@
 package ru.job4j.todo.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -18,7 +21,7 @@ public class Task {
     private int id;
     private String name;
     private String description;
-    private Timestamp created;
+    private final LocalDateTime created = LocalDateTime.now().withNano(0);
     private boolean done;
 
     @Override

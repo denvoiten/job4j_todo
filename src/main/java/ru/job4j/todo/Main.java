@@ -23,6 +23,6 @@ public class Main {
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
-        LOG.info("Go to http://localhost:8080/index");
+        LOG.info("Go to http://localhost:8080/allTasks");
     }
 }
