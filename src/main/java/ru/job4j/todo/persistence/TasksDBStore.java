@@ -2,10 +2,12 @@ package ru.job4j.todo.persistence;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.models.Task;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Repository
 public class TasksDBStore {
@@ -15,103 +17,86 @@ public class TasksDBStore {
         this.sf = sf;
     }
 
+    private <T> T transaction(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction transaction = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            transaction.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
     public Task add(Task task) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.save(task);
-        session.getTransaction().commit();
-        session.close();
-        return task;
+        return (Task) this.transaction(session -> session.merge(task));
     }
 
     public void delete(int id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.createQuery("delete Task t where t.id = :id")
+        this.transaction(session -> session
+                .createQuery("delete Task t where t.id = :id")
                 .setParameter("id", id)
-                .executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+                .executeUpdate());
     }
 
     public void update(Task task) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.createQuery(
-                        "update Task t set t.name = :newName, t.description = :newDesc, t.created = :newCreated "
-                                + "where t.id = :id")
+        this.transaction(session -> session
+                .createQuery("update Task t set t.name = :newName, "
+                        + "t.description = :newDesc, t.created = :newCreated "
+                        + "where t.id = :id")
                 .setParameter("newName", task.getName())
                 .setParameter("newDesc", task.getDescription())
                 .setParameter("newCreated", task.getCreated())
                 .setParameter("id", task.getId())
-                .executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+                .executeUpdate());
     }
 
     public List<Task> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Task> taskList = session.createQuery("from Task t order by t.id").getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return taskList;
+        return this.transaction(session -> session
+                .createQuery("from Task t order by t.id")
+                .getResultList());
     }
 
     public Task findById(int id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        Task task = (Task) session.createQuery("from Task where id = :id").setParameter("id", id).uniqueResult();
-        session.getTransaction().commit();
-        session.close();
-        return task;
+        return (Task) this.transaction(session -> session
+                .createQuery("from Task where id = :id")
+                .setParameter("id", id)
+                .uniqueResult());
     }
 
     public void setDoneById(int id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.createQuery(
-                        "update Task t set t.done = :flag "
-                                + "where t.id = :id")
+        this.transaction(session -> session
+                .createQuery("update Task t set t.done = :flag "
+                        + "where t.id = :id")
                 .setParameter("flag", true)
                 .setParameter("id", id)
-                .executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+                .executeUpdate());
     }
 
     public void setActiveById(int id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.createQuery(
-                        "update Task t set t.done = :flag "
-                                + "where t.id = :id")
+        this.transaction(session -> session
+                .createQuery("update Task t set t.done = :flag "
+                        + "where t.id = :id")
                 .setParameter("flag", false)
                 .setParameter("id", id)
-                .executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+                .executeUpdate());
     }
 
     public List<Task> findActive() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Task> taskList = session.createQuery("from Task t where t.done = :flag")
+        return this.transaction(session -> session
+                .createQuery("from Task t where t.done = :flag")
                 .setParameter("flag", false)
-                .getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return taskList;
+                .getResultList());
     }
 
     public List<Task> findDone() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Task> taskList = session.createQuery("from Task t where t.done = :flag")
+        return this.transaction(session -> session
+                .createQuery("from Task t where t.done = :flag")
                 .setParameter("flag", true)
-                .getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return taskList;
+                .getResultList());
     }
 }
