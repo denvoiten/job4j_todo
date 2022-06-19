@@ -37,6 +37,20 @@
                 </ul>
             </div>
         </div>
+        <div class="navbar-nav justify-content-end">
+            <ul class="nav nav-pills">
+                <div th:if="${user.name != null}">
+                    <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">
+                        <span th:text="${user.name}"></span>
+                        <span> | Войти</span>
+                    </a>
+                    <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">
+                        <span th:text="${user.name}"></span>
+                        <span> | Выйти</span>
+                    </a>
+                </div>
+            </ul>
+        </div>
     </nav>
     <div class="row" th:each="task : ${tasks}">
         <div class="col">

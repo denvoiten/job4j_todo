@@ -37,6 +37,20 @@
                 </ul>
             </div>
         </div>
+        <div class="navbar-nav justify-content-end">
+            <ul class="nav nav-pills">
+                <div th:if="${user.name != null}">
+                    <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">
+                        <span th:text="${user.name}"></span>
+                        <span> | Войти</span>
+                    </a>
+                    <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">
+                        <span th:text="${user.name}"></span>
+                        <span> | Выйти</span>
+                    </a>
+                </div>
+            </ul>
+        </div>
     </nav>
     <div class="row" th:each="task : ${tasks}">
         <div class="col">
@@ -62,9 +76,17 @@
                         <div class="col-6 col-md-4 text-right align-self-center">
                             <span th:if="${!task.done}">
                                 <span class="badge badge-primary">Active</span>
+                                <p></p>
+                                <p class="card-subtitle text-muted">Автор:
+                                    <span class="card-text" th:text="${task.user.name}"/>
+                                </p>
                             </span>
                             <span th:if="${task.done}">
                                 <span class="badge badge-success">Done</span>
+                                <p></p>
+                                 <p class="card-subtitle text-muted">Автор:
+                                    <span class="card-text" th:text="${task.user.name}"/>
+                                </p>
                             </span>
                         </div>
                     </div>
@@ -74,7 +96,8 @@
     </div>
     <form>
         <button type="submit" class="btn btn-success mt-1 col-12"
-                th:formaction="@{/addTask}">Add task</button>
+                th:formaction="@{/addTask}">Add task
+        </button>
     </form>
 </div>
 </body>

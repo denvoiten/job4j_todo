@@ -18,5 +18,6 @@
         <property name="use_sql_comments">true</property>
 
         <mapping class="ru.job4j.todo.models.Task"/>
+        <mapping class="ru.job4j.todo.models.User" />
     </session-factory>
 </hibernate-configuration>

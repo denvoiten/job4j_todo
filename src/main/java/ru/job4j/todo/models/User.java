@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -14,19 +14,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Setter
 @Entity
-@Table(name = "tasks")
-public class Task {
+@Table(name = "users")
+public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String description;
-    private final LocalDateTime created = LocalDateTime.now().withNano(0);
-    private boolean done;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String email;
+    private String password;
 
     @Override
     public boolean equals(Object o) {
@@ -36,13 +33,12 @@ public class Task {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Task task = (Task) o;
-        return id == task.id;
+        User user = (User) o;
+        return id == user.id && Objects.equals(name, user.name) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, email);
     }
 }
-
