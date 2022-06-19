@@ -33,8 +33,7 @@ public class UserDBStore {
     }
 
     public Optional<User> add(User user) {
-        User rsl = (User) this.transaction(session -> session.merge(user));
-        return rsl == null ? Optional.empty() : Optional.of(rsl);
+        return Optional.of((User) this.transaction(session -> session.merge(user)));
     }
 
     public Optional<User> findUserByEmailAndPwd(String email, String password) {
