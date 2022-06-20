@@ -77,14 +77,14 @@
                             <span th:if="${!task.done}">
                                 <span class="badge badge-primary">Active</span>
                                 <p></p>
-                                <p class="card-subtitle text-muted">Автор:
+                                <p class="card-subtitle text-muted">Author:
                                     <span class="card-text" th:text="${task.user.name}"/>
                                 </p>
                             </span>
                             <span th:if="${task.done}">
                                 <span class="badge badge-success">Done</span>
                                 <p></p>
-                                 <p class="card-subtitle text-muted">Автор:
+                                 <p class="card-subtitle text-muted">Author:
                                     <span class="card-text" th:text="${task.user.name}"/>
                                 </p>
                             </span>
