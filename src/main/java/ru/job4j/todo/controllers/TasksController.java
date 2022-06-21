@@ -3,24 +3,25 @@ package ru.job4j.todo.controllers;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.models.Task;
 import ru.job4j.todo.models.User;
+import ru.job4j.todo.services.CategoryService;
 import ru.job4j.todo.services.TasksService;
 
 import javax.servlet.http.HttpSession;
+import java.util.Set;
 
 @ThreadSafe
 @Controller
 public class TasksController {
     private static final String TASKS = "tasks";
     private final TasksService tasksService;
+    private final CategoryService categoryService;
 
-    public TasksController(TasksService tasksService) {
+    public TasksController(TasksService tasksService, CategoryService categoryService) {
         this.tasksService = tasksService;
+        this.categoryService = categoryService;
     }
 
     private void setUser(Model model, HttpSession session) {
@@ -42,12 +43,16 @@ public class TasksController {
     @GetMapping("/addTask")
     public String addTask(Model model, HttpSession session) {
         setUser(model, session);
+        model.addAttribute("categories", categoryService.findAll());
         return "addTask";
     }
 
     @PostMapping("/createTask")
-    public String createTask(@ModelAttribute Task task, HttpSession session) {
+    public String createTask(@ModelAttribute Task task,
+                             @RequestParam Set<Integer> categoryID,
+                             HttpSession session) {
         task.setUser((User) session.getAttribute("user"));
+        task.setCategories(categoryService.getCategories(categoryID));
         tasksService.add(task);
         return "redirect:/allTasks";
     }
@@ -87,6 +92,7 @@ public class TasksController {
 
     @GetMapping("/setActive/{taskId}")
     public String setActive(Model model, @PathVariable("taskId") int id, HttpSession session) {
+        setUser(model, session);
         tasksService.setActiveById(id);
         return "redirect:/description/{taskId}";
     }

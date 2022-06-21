@@ -67,13 +67,23 @@
                                        id="name" required>
                             </label>
                         </div>
-
                     </div>
-                    <label for="description" class="col">Description
-                        <textarea class="form-control" placeholder="Enter description"
-                                  name="description"
-                                  id="description" rows="4"></textarea>
-                    </label>
+                    <div class="form-group col-12">
+                        <label for="category.id">Select category</label>
+                        <select class="form-control" id="category.id" name="categoryID" multiple required>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="description" class="col">Description
+                            <textarea class="form-control" placeholder="Enter description"
+                                      name="description"
+                                      id="description" rows="4"></textarea>
+                        </label>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary shadow mt-3">Save</button>
             </form>

@@ -19,5 +19,6 @@
 
         <mapping class="ru.job4j.todo.models.Task"/>
         <mapping class="ru.job4j.todo.models.User" />
+        <mapping class="ru.job4j.todo.models.Category" />
     </session-factory>
 </hibernate-configuration>

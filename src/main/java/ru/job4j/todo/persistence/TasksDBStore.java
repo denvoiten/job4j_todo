@@ -41,7 +41,7 @@ public class TasksDBStore implements StoreTransaction {
 
     public List<Task> findAll() {
         return transaction(session -> session
-                        .createQuery("from Task t order by t.id")
+                        .createQuery("SELECT DISTINCT t FROM Task t JOIN FETCH t.categories ORDER BY t.id")
                         .getResultList(),
                 sf);
     }
