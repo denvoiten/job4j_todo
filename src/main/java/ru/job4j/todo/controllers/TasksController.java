@@ -36,6 +36,7 @@ public class TasksController {
     @GetMapping("/allTasks")
     public String allTasks(Model model, HttpSession session) {
         setUser(model, session);
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute(TASKS, tasksService.findAll());
         return "allTasks";
     }
@@ -67,12 +68,17 @@ public class TasksController {
     @GetMapping("/editTask/{taskId}")
     public String editTask(Model model, @PathVariable("taskId") int id, HttpSession session) {
         setUser(model, session);
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("task", tasksService.findById(id));
         return "editTask";
     }
 
     @PostMapping("/editTask")
-    public String editTask(@ModelAttribute Task task) {
+    public String editTask(@ModelAttribute Task task,
+                           @RequestParam Set<Integer> categoryID,
+                           HttpSession session) {
+        task.setUser((User) session.getAttribute("user"));
+        task.setCategories(categoryService.getCategories(categoryID));
         tasksService.update(task);
         return "redirect:/description/" + task.getId();
     }

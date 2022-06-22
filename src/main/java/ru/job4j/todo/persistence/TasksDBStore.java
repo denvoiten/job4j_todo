@@ -27,16 +27,11 @@ public class TasksDBStore implements StoreTransaction {
     }
 
     public void update(Task task) {
-        transaction(session -> session
-                        .createQuery("UPDATE Task t SET t.name = :newName, "
-                                + "t.description = :newDesc, t.created = :newCreated "
-                                + "WHERE t.id = :id")
-                        .setParameter("newName", task.getName())
-                        .setParameter("newDesc", task.getDescription())
-                        .setParameter("newCreated", task.getCreated())
-                        .setParameter("id", task.getId())
-                        .executeUpdate(),
-                sf);
+        transaction(session -> {
+                    session.update(task);
+                    return task;
+                }, sf
+        );
     }
 
     public List<Task> findAll() {
@@ -48,7 +43,7 @@ public class TasksDBStore implements StoreTransaction {
 
     public Task findById(int id) {
         return (Task) transaction(session -> session
-                .createQuery("FROM Task WHERE id = :id")
+                .createQuery("SELECT DISTINCT t FROM Task t JOIN FETCH t.categories WHERE t.id = :id")
                 .setParameter("id", id)
                 .uniqueResult(), sf);
     }

@@ -68,6 +68,15 @@
                             </label>
                         </div>
                     </div>
+                    <div class="form-group col-12">
+                        <label for="category.id">Select category</label>
+                        <select class="form-control" id="category.id" name="categoryID" multiple required>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}">
+                            </option>
+                        </select>
+                    </div>
                     <label for="description" class="col">Description
                         <textarea class="form-control" name="description"
                                   id="description" rows="4" th:field="*{description}"></textarea>

@@ -56,7 +56,7 @@
         <div class="col">
             <div class="shadow card">
                 <div class="card-body">
-                    <span th:if="${!task.done}">
+                     <span th:if="${!task.done}">
                                 <span class="badge badge-primary">Active</span>
                         <h5 class="card-title" th:text="${task.name}"/>
                     </span>
@@ -64,7 +64,21 @@
                                 <span class="badge badge-success">Done</span>
                         <h5 class="card-title" style="text-decoration: line-through" th:text="${task.name}"/>
                     </span>
-                    <p class="card-text" th:text="${task.description}"/>
+                    <p>
+                        <span class="card-text" th:text="${task.description}"/>
+                    </p>
+                    <p>
+                        <b>Категории:</b>
+                        <span th:each="category: ${task.getCategories()}" th:text="${category.name} + '; '"></span>
+                    </p>
+                    <p>
+                        <b>Дата создания:</b>
+                        <span class="card-text" th:text="${task.created}"/>
+                    </p>
+                    <p>
+                        <b>Автор:</b>
+                        <span class="card-text" th:text="${task.user.name}"/>
+                    </p>
                     <div class="row">
                         <form>
                         <span th:if="${!task.done}">
@@ -80,9 +94,11 @@
                         </form>
                         <form>
                             <button type="submit" class="btn btn-warning ml-2"
-                                    th:formaction="@{|/editTask/${task.id}|}">Edit</button>
+                                    th:formaction="@{|/editTask/${task.id}|}">Edit
+                            </button>
                             <button type="submit" class="btn btn-danger ml-1"
-                                    th:formaction="@{|/deleteTask/${task.id}|}">Delete</button>
+                                    th:formaction="@{|/deleteTask/${task.id}|}">Delete
+                            </button>
                         </form>
                     </div>
                 </div>
