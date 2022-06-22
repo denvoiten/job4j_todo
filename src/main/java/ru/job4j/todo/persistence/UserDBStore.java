@@ -20,7 +20,7 @@ public class UserDBStore implements StoreTransaction {
 
     public Optional<User> findUserByEmailAndPwd(String email, String password) {
         return transaction(session -> session
-                        .createQuery("from User u where u.email = :email and u.password = :password")
+                        .createQuery("FROM User u WHERE u.email = :email AND u.password = :password")
                         .setParameter("email", email)
                         .setParameter("password", password)
                         .uniqueResultOptional(),

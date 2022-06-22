@@ -20,7 +20,7 @@ public class TasksDBStore implements StoreTransaction {
 
     public void delete(int id) {
         transaction(session -> session
-                        .createQuery("delete Task t where t.id = :id")
+                        .createQuery("DELETE Task t WHERE t.id = :id")
                         .setParameter("id", id)
                         .executeUpdate(),
                 sf);
@@ -28,9 +28,9 @@ public class TasksDBStore implements StoreTransaction {
 
     public void update(Task task) {
         transaction(session -> session
-                        .createQuery("update Task t set t.name = :newName, "
+                        .createQuery("UPDATE Task t SET t.name = :newName, "
                                 + "t.description = :newDesc, t.created = :newCreated "
-                                + "where t.id = :id")
+                                + "WHERE t.id = :id")
                         .setParameter("newName", task.getName())
                         .setParameter("newDesc", task.getDescription())
                         .setParameter("newCreated", task.getCreated())
@@ -48,15 +48,15 @@ public class TasksDBStore implements StoreTransaction {
 
     public Task findById(int id) {
         return (Task) transaction(session -> session
-                .createQuery("from Task where id = :id")
+                .createQuery("FROM Task WHERE id = :id")
                 .setParameter("id", id)
                 .uniqueResult(), sf);
     }
 
     public void setDoneById(int id) {
         transaction(session -> session
-                        .createQuery("update Task t set t.done = :flag "
-                                + "where t.id = :id")
+                        .createQuery("UPDATE Task t SET t.done = :flag "
+                                + "WHERE t.id = :id")
                         .setParameter("flag", true)
                         .setParameter("id", id)
                         .executeUpdate(),
@@ -65,8 +65,8 @@ public class TasksDBStore implements StoreTransaction {
 
     public void setActiveById(int id) {
         transaction(session -> session
-                        .createQuery("update Task t set t.done = :flag "
-                                + "where t.id = :id")
+                        .createQuery("UPDATE Task t SET t.done = :flag "
+                                + "WHERE t.id = :id")
                         .setParameter("flag", false)
                         .setParameter("id", id)
                         .executeUpdate(),
@@ -75,7 +75,8 @@ public class TasksDBStore implements StoreTransaction {
 
     public List<Task> findActive() {
         return transaction(session -> session
-                        .createQuery("from Task t where t.done = :flag")
+                        .createQuery("SELECT DISTINCT t FROM Task t JOIN FETCH t.categories WHERE t.done = :flag "
+                                + "ORDER BY t.id")
                         .setParameter("flag", false)
                         .getResultList(),
                 sf);
@@ -83,7 +84,8 @@ public class TasksDBStore implements StoreTransaction {
 
     public List<Task> findDone() {
         return transaction(session -> session
-                        .createQuery("from Task t where t.done = :flag")
+                        .createQuery("SELECT DISTINCT t FROM Task t JOIN FETCH t.categories WHERE t.done = :flag "
+                                + "ORDER BY t.id")
                         .setParameter("flag", true)
                         .getResultList(),
                 sf);

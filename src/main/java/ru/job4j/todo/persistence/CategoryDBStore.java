@@ -18,14 +18,14 @@ public class CategoryDBStore implements StoreTransaction {
 
     public List<Category> findAll() {
         return transaction(session -> session
-                        .createQuery("from Category order by id")
+                        .createQuery("FROM Category ORDER BY id")
                         .getResultList(),
                 sf);
     }
 
     private Category findById(int id) {
         return (Category) transaction(session -> session
-                .createQuery("from Category where id = :id")
+                .createQuery("FROM Category WHERE id = :id")
                 .setParameter("id", id)
                 .uniqueResult(), sf);
     }

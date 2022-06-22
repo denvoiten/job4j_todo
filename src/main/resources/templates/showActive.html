@@ -65,6 +65,9 @@
                                     </span>
                                 </a>
                             </h5>
+                            <div> <p class="text-muted">Category:
+                                <span th:each="category: ${task.categories}" th:text="${category.name}  + '; '"/>
+                            </p></div>
                             <p class="card-subtitle text-muted">
                                 Created
                                 <span th:text="${task.created}"/></span>
