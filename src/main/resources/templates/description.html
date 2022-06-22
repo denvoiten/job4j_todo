@@ -68,15 +68,15 @@
                         <span class="card-text" th:text="${task.description}"/>
                     </p>
                     <p>
-                        <b>Категории:</b>
+                        <b>Category:</b>
                         <span th:each="category: ${task.getCategories()}" th:text="${category.name} + '; '"></span>
                     </p>
                     <p>
-                        <b>Дата создания:</b>
+                        <b>Created:</b>
                         <span class="card-text" th:text="${task.created}"/>
                     </p>
                     <p>
-                        <b>Автор:</b>
+                        <b>Author:</b>
                         <span class="card-text" th:text="${task.user.name}"/>
                     </p>
                     <div class="row">
