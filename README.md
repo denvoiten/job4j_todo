@@ -1,4 +1,4 @@
-# job4j_todo
+# TODO List
 
 ## О проекте.
 
