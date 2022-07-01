@@ -7,7 +7,7 @@ Web-приложения для постановки и отслеживания
 Позволяет составлять списки дел и закрывать их по мере выполнения.
 
 #### Технологии
-> JDK17, Maven, Spring boot, Thymeleaf, Bootstrap, HTML, PostgreSQL, Hibernate, HQL
+> JDK11, Maven, Spring boot, Thymeleaf, Bootstrap, HTML, PostgreSQL, Hibernate, HQL
 
 
 ## Использование
